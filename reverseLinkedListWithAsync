@@ -1,0 +1,87 @@
+/******************************************************************************
+
+                            Online C# Compiler.
+                Code, Compile, Run and Debug C# program online.
+Write your code in this editor and press "Run" button to execute it.
+
+*******************************************************************************/
+
+using System;
+using System.Threading.Tasks;
+
+class HelloWorld {
+public static async Task Main() {
+
+		LinkedList list= new LinkedList()
+		.AddListNode(1)
+		.AddListNode(2)
+		.AddListNode(3)
+		.AddListNode(4);
+		
+		Node node= await list.reverseLinkedList(list.Head);
+
+		while(node.next!=null)
+		{
+			Console.Write(node.val+">>");
+			node=node.next;
+		}
+		Console.Write(node.val+">>");
+	}
+}
+
+public class Node {
+
+	public int val=0;
+	public Node next=null;
+
+	public Node(int val)
+	{
+		this.val=val;
+		this.next=null;
+	}
+}
+
+
+public class LinkedList
+{
+	public Node Head=null;
+
+	public LinkedList AddListNode(int val)
+	{
+		Node newItem=new Node(val);
+
+		if(this.Head==null) {
+			this.Head=newItem;
+		}
+		else {
+			Node current=this.Head;
+			while(current.next!=null) {
+				current=current.next;
+			}
+			current.next=newItem;
+		}
+
+		return this;
+	}
+
+	public async Task<Node> reverseLinkedList(Node node)
+	{
+		Node prev=null;
+		Node current=node;
+
+		while(current!=null)
+		{
+		     await Task.Delay(100);
+			Console.Write(current.val+">>");
+			Node next=current.next;
+			current.next=prev;
+			prev=current;
+			current=next;
+		}
+
+		Console.WriteLine();
+		return prev;
+	}
+}
+
+
