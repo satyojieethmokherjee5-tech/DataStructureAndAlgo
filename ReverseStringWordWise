@@ -1,0 +1,83 @@
+using System;
+using System.Collections.Generic;
+					
+public class Program
+{
+	public static void Main()
+	{		
+		string data="My Name is Tom and jerry";		
+		
+		Console.WriteLine(ReverseAndReorderUsingStack(data));	
+		Console.WriteLine(ReverseAndReorderUsingStringBuilder(data));
+		Console.WriteLine(ReverseAndReorderUsingLinkedList(data));	
+		Console.Write(reverseUsingArray(data));	
+		
+	  }	
+	
+	public static string ReverseAndReorderUsingStringBuilder(string data)
+    {
+		var reveresed=new System.Text.StringBuilder();
+		
+		for(int i=data.Length-1;i>=0;i-- )
+		{
+			reveresed.Append(data[i]);	
+		}
+		
+		string output= reveresed.ToString();		
+		string[] finalOutput=output.Split(" ");
+		Array.Reverse(finalOutput);		
+		output=String.Join(" ", finalOutput);
+		return output;		
+    }
+	
+	public static string ReverseAndReorderUsingLinkedList(string data)
+    {
+		LinkedList<char> list=new LinkedList<char>(data);
+		var node= list.Last;
+		var reveresed=new System.Text.StringBuilder();
+		
+		while(node!=null)
+		{
+			reveresed.Append(node.Value);
+			node=node.Previous;			
+		}
+		
+		string output= reveresed.ToString();		
+		string[] finalOutput=output.Split(" ");
+		Array.Reverse(finalOutput);		
+		output=String.Join(" ", finalOutput);
+		return output;		
+    }
+	
+	public static string ReverseAndReorderUsingStack(string data)
+    {
+		Stack<char> stack=new Stack<char>();
+		foreach(var c in data) {stack.Push(c);}
+		
+		char[] reveresedArr=stack.ToArray();
+		string output= new string(reveresedArr);
+		
+		string[] finaloutput= output.Split(" ");			
+		Array.Reverse(finaloutput);		
+		output=String.Join(" ", finaloutput);
+		return output;		
+    }
+
+	
+	static string reverseUsingArray(string data)
+	{
+		char[] datac=data.ToCharArray();		
+		char[] dataoutput=new char[data.Length];
+		
+		for(int i=data.Length-1, j=0;j<data.Length;j++,i--){
+			
+			dataoutput[j]=datac[i];
+		}		
+		string output= String.Concat(dataoutput);		
+		string[] finaloutput= output.Split(" ");			
+		Array.Reverse(finaloutput);		
+		output=String.Join(" ", finaloutput);
+		return output;
+	}
+	
+	}
