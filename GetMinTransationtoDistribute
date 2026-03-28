@@ -1,0 +1,111 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
+public class Solution
+{
+    public static long GetMinimumTransactions(int[] assetAmounts)
+    {
+        int n = assetAmounts.Length;
+        
+        // Calculate the total sum of all assets
+        // Using long to prevent overflow for large arrays
+        long totalSum = 0;
+        foreach (int amount in assetAmounts)
+        {
+            totalSum += amount;
+        }
+
+        long runningSumA = 0;
+        long minDifference = long.MaxValue;
+
+        // Iterate until n-1 because Portfolio B must be non-empty (j < n)
+        for (int i = 0; i < n - 1; i++)
+        {
+            runningSumA += assetAmounts[i];
+            long currentSumB = totalSum - runningSumA;
+            
+            // The transactions needed to equalize is the absolute difference
+            long currentDifference = Math.Abs(runningSumA - currentSumB);
+
+            if (currentDifference < minDifference)
+            {
+                minDifference = currentDifference;
+            }
+        }
+
+        return minDifference;
+    }
+
+    public static void Main()
+    {
+        int[] assets = { 10, 2, 7, 6, 5 };
+        Console.WriteLine($"Minimum Transactions: {GetMinimumTransactions(assets)}");
+    }
+}
+
+
+//Complexity Analysis
+//​Time Complexity: O(n). We pass through the array once to get the total sum and once more to find the optimal split.
+​//Space Complexity: O(1). We only store a few long variables regardless of the input size.
+//​Key Requirement Note
+//​The prompt mentions that shares must remain positive (greater than 0). Since we only need to return the number of transactions and aren't asked to modify the array, the absolute difference logic still holds. Even if the difference is huge, we can mathematically "add" shares to the smaller portfolio to equalize them without ever hitting zero.
+//​Would you like to walk through a specific numerical example to see how the sums change at each split point?
+
+Looking at the example in your image, the logic confirms that we are looking for the minimum difference between the sums of the two portfolios.
+With n = 3 and assetAmounts = [1, 4, 4], let's test both possible split points (j=1 and j=2):
+Tracing the Example
+ * Case 1: Split at j = 1
+   * Portfolio A: [1] (Sum = 1)
+   * Portfolio B: [4, 4] (Sum = 8)
+   * Transactions needed: |1 - 8| = 7
+ * Case 2: Split at j = 2
+   * Portfolio A: [1, 4] (Sum = 5)
+   * Portfolio B: [4] (Sum = 4)
+   * Transactions needed: |5 - 4| = 1
+The minimum of these is 1, which matches the example output.
+C# Code for Large Constraints
+The constraints in your image are quite high (n up to 3 \times 10^5 and assetAmounts up to 2 \times 10^9). This confirms two things for the code:
+ * Performance: We must use the O(n) prefix sum approach (the nested loop approach would be O(n^2) and would time out).
+ * Data Types: The sums will exceed the capacity of a standard int. We must use long (64-bit integer) to calculate the totals.
+using System;
+
+public class Solution
+{
+    public static long getMinimumTransactions(int[] assetAmounts)
+    {
+        int n = assetAmounts.Length;
+        long totalSum = 0;
+
+        // Calculate total sum using long to prevent overflow
+        for (int i = 0; i < n; i++)
+        {
+            totalSum += assetAmounts[i];
+        }
+
+        long currentA = 0;
+        long minTransactions = long.MaxValue;
+
+        // Check every possible split point j (from 1 to n-1)
+        // In the loop, i represents the index, so i=0 is split j=1
+        for (int i = 0; i < n - 1; i++)
+        {
+            currentA += assetAmounts[i];
+            long currentB = totalSum - currentA;
+
+            long diff = Math.Abs(currentA - currentB);
+
+            if (diff < minTransactions)
+            {
+                minTransactions = diff;
+            }
+        }
+
+        return minTransactions;
+    }
+}
+
+Why this is optimal
+ * Time: By pre-calculating the totalSum, we turn a complex "re-summing" problem into a simple subtraction problem inside a single loop.
+ * Space: We don't create any new arrays or lists, keeping the memory footprint minimal.
+Would you like to explore how to handle this if the split didn't have to be contiguous (i.e., you could pick any assets for A and B)?
